@@ -67,7 +67,7 @@ function openUrlsInBatches(urls, batchSize, delay) {
         if (index < total) {
             setTimeout(openNextBatch, delay);
         } else {
-            document.getElementById('fileContent').textContent += `\n✅ All URLs opened.`;
+            document.getElementById('fileContent').textContent += `\n All URLs opened.`;
         }
     }
 
