@@ -1,5 +1,3 @@
-console.log("content.js 已載入！");
-
 
 chrome.runtime.onMessage.addListener((msg) => {
     console.log("--- 收到 background 回傳的訊息", msg);
