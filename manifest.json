@@ -1,0 +1,22 @@
+{
+    "manifest_version": 3,
+    "name": "Penny Extension Message",
+    "version": "1.2",
+    "description": "Upload LinkedIn URLs and click message buttons on the profile pages.",
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "128": "cat.png"
+        }
+    },
+    "permissions": [
+        "tabs",
+        "scripting"
+    ],
+    "host_permissions": [
+        "https://www.linkedin.com/*"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    }
+}
