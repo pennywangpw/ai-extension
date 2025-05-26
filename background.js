@@ -18,6 +18,7 @@ chrome.runtime.onMessage.addListener((msg, sender) => {
     console.log("收到 content.js or popup.js 傳來的訊息", msg);
     if (msg.type === "open_urls_in_batches") {
         openUrlsInBatches(msg.urls, msg.batchSize, msg.delay);
+
     }
     if (msg.type === "generate_message") {
         const experienceText = msg.payload;

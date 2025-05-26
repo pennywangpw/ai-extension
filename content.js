@@ -1,9 +1,8 @@
-
 chrome.runtime.onMessage.addListener((msg) => {
     console.log("--- 收到 background 回傳的訊息", msg);
     if (msg.type === "insert_message") {
         const message = msg.message;
-
+        //找到message input
         const inputBox = document.querySelector('div[contenteditable="true"][aria-label="Write a message…"]');
 
         if (inputBox) {
@@ -26,23 +25,30 @@ chrome.runtime.onMessage.addListener((msg) => {
             }));
 
             // 找送出按鈕
-            // const sendButton = Array.from(document.querySelectorAll('button'))
-            //     .find(btn => btn.className.includes("msg-form__send-button"));
-
             const sendButton = document.querySelector('button.msg-form__send-button');
             if (sendButton) {
-                sendButton.click();
+                setTimeout(() => {
+                    console.log("準備點擊 sendButton", sendButton);
+
+                    sendButton.dispatchEvent(new MouseEvent("click", {
+                        bubbles: true,
+                        cancelable: true,
+                        view: window
+                    }));
+                }, 2000);
+
                 console.log(" 已點擊送出按鈕");
             } else {
                 console.log(" 沒找到送出按鈕");
             }
+
         } else {
             console.log(" 沒找到 Message 輸入框");
         }
     }
 });
 
-
+//get person's experience
 function extractExperienceText() {
     const cards = document.querySelectorAll('.artdeco-card.pv-profile-card.break-words.mt2');
     for (const card of cards) {
@@ -90,4 +96,9 @@ async function clickMessageButton() {
     console.log("沒找到 Message 按鈕");
 }
 
-setTimeout(clickMessageButton, 3000);
+
+if (document.readyState === 'complete') {
+    clickMessageButton();
+} else {
+    window.addEventListener('load', clickMessageButton);
+}
