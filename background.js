@@ -1,3 +1,4 @@
+//check the tab is open and inject content.js into tab page
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (
         changeInfo.status === "complete" &&
@@ -10,9 +11,15 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     }
 });
 
-
+//listen to popup.js and content.js
+//if receive from popup.js open tabs
+//if receive from content.js call backend api to generate message
 chrome.runtime.onMessage.addListener((msg, sender) => {
-    console.log("收到 content.js 傳來的訊息", msg);
+    console.log("收到 content.js or popup.js 傳來的訊息", msg);
+    if (msg.type === "open_urls_in_batches") {
+        openUrlsInBatches(msg.urls, msg.batchSize, msg.delay);
+
+    }
     if (msg.type === "generate_message") {
         const experienceText = msg.payload;
         fetch("http://localhost:3000/generate", {
@@ -30,3 +37,24 @@ chrome.runtime.onMessage.addListener((msg, sender) => {
             .catch(err => console.error("Server Error:", err));
     }
 });
+
+
+function openUrlsInBatches(urls, batchSize, delay) {
+    let index = 0;
+    const total = urls.length;
+
+    function openNextBatch() {
+        const batch = urls.slice(index, index + batchSize);
+        batch.forEach(url => {
+            chrome.tabs.create({ url });
+        });
+
+        index += batchSize;
+
+        if (index < total) {
+            setTimeout(openNextBatch, delay);
+        }
+    }
+
+    openNextBatch();
+}
