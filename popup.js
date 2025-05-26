@@ -8,6 +8,10 @@ document.getElementById('fileInput').addEventListener('change', function (e) {
         const content = event.target.result;
         const ext = file.name.split('.').pop().toLowerCase();
 
+        //找出input file中的persona
+        const persona = document.getElementById('personaSelect').value;
+
+        //找出input file中的urls
         let urls = [];
 
         try {
@@ -33,6 +37,7 @@ document.getElementById('fileInput').addEventListener('change', function (e) {
             chrome.runtime.sendMessage({
                 type: "open_urls_in_batches",
                 urls,
+                persona,
                 batchSize: 2,
                 delay: 4000
             });
