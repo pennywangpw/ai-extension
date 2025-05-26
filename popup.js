@@ -29,7 +29,13 @@ document.getElementById('fileInput').addEventListener('change', function (e) {
 
             document.getElementById('fileContent').textContent = `Found ${urls.length} LinkedIn URLs.\nOpening 3 at a time...\n`;
 
-            openUrlsInBatches(urls, 1, 4000); // 每批 2 個，每 4 秒
+            // 每批 2 個，每 4 秒
+            chrome.runtime.sendMessage({
+                type: "open_urls_in_batches",
+                urls,
+                batchSize: 2,
+                delay: 4000
+            });
 
         } catch (err) {
             console.error("這裡有錯誤--", err);
@@ -44,32 +50,4 @@ function extractLinkedInUrls(text) {
     const regex = /https?:\/\/(www\.)?linkedin\.com\/[^\s,"'}]+/g;
     const matches = text.match(regex);
     return matches ? [...new Set(matches)] : [];
-}
-
-function openUrlsInBatches(urls, batchSize, delay) {
-    let index = 0;
-    const total = urls.length;
-
-    function openNextBatch() {
-        const batch = urls.slice(index, index + batchSize);
-        batch.forEach(url => {
-            chrome.tabs.create({ url });
-        });
-
-        index += batch.length;
-
-        const opened = index;
-        const remaining = total - opened;
-
-        document.getElementById('fileContent').textContent =
-            `Total URLs: ${total}\nOpened: ${opened}\nRemaining: ${remaining}`;
-
-        if (index < total) {
-            setTimeout(openNextBatch, delay);
-        } else {
-            document.getElementById('fileContent').textContent += `\n All URLs opened.`;
-        }
-    }
-
-    openNextBatch();
 }
