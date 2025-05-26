@@ -14,9 +14,11 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 //listen to popup.js and content.js
 //if receive from popup.js open tabs
 //if receive from content.js call backend api to generate message
+let currentPersona = "sales_rep"; // 預設
 chrome.runtime.onMessage.addListener((msg, sender) => {
     console.log("收到 content.js or popup.js 傳來的訊息", msg);
     if (msg.type === "open_urls_in_batches") {
+        currentPersona = msg.persona || "sales_rep";
         openUrlsInBatches(msg.urls, msg.batchSize, msg.delay);
 
     }
@@ -25,7 +27,7 @@ chrome.runtime.onMessage.addListener((msg, sender) => {
         fetch("http://localhost:3000/generate", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ experienceText })
+            body: JSON.stringify({ experienceText, persona: currentPersona })
         })
             .then(res => res.json())
             .then(data => {

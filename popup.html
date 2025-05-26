@@ -15,6 +15,15 @@
     <label><input type="radio" name="mode" id="dryRunToggle" value="dryrun" /> Dry-run mode</label>
     <br />
 
+    <br>
+    <label for="personaSelect">Choose a Persona:</label>
+    <select id="personaSelect">
+        <option value="sales_rep">Sales Rep</option>
+        <option value="startup_founder">Startup Founder</option>
+        <option value="investor">Investor</option>
+    </select>
+
+    <br />
     <h1>Upload CSV or JSON</h1>
     <input type="file" id="fileInput" accept=".csv,.json" />
     <pre id="fileContent" style="white-space: pre-wrap;"></pre>

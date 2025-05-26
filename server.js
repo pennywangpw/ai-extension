@@ -17,13 +17,16 @@ const ai = new GoogleGenAI({
 
 app.post("/generate", async (req, res) => {
     const experienceText = req.body.experienceText;
+    const persona = req.body.persona;
+
     console.log("收到background的內容：", experienceText);
+    console.log("收到background的內容-persona：", persona);
 
     try {
         // 用官方推薦的 model 名稱
         const response = await ai.models.generateContent({
             model: "gemini-2.0-flash",
-            contents: `based on person's experience:\n\n${experienceText}\n\nWrite a friendly short message to make connection and introduce my company which in common. invite a person with 15 minutes call.`,
+            contents: `You are ${persona} based on person's experience:\n\n${experienceText}\n\nWrite a friendly short message to make connection and introduce my company which in common. invite a person with 15 minutes call.`,
 
         });
 
